@@ -1,0 +1,15 @@
+*.o
+*.elf
+*.bin
+*.iso
+
+build/
+iso/
+
+opt/
+cross/
+
+*.swp
+*.swo
+*.tmp
+.DS_Store
