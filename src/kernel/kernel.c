@@ -29,7 +29,7 @@ enum vga_color {
 	VGA_COLOR_WHITE = 15,
 };
 
-static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg) 
+static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg)
 {
 	return fg | bg << 4;
 }
@@ -70,7 +70,7 @@ void terminal_initialize(void)
 	}
 }
 
-void terminal_setcolor(uint8_t color) 
+void terminal_setcolor(uint8_t color)
 {
 	terminal_color = color;
 }
@@ -81,13 +81,13 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y)
 	terminal_buffer[index] = vga_entry(c, color);
 }
 
-void terminal_putchar(char c) 
+void terminal_putchar(char c)
 {
-	terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
-	if (++terminal_column == VGA_WIDTH) {
-		terminal_column = 0;
-		if (++terminal_row == VGA_HEIGHT)
-			terminal_row = 0;
+	terminal_putentryat(c, terminal_color , terminal_column, terminal_row);
+	if(terminal_column == VGA_WIDTH){
+		terminal_column=0;
+		if(terminal_row == VGA_HEIGHT)
+			terminal_row=0;
 	}
 }
 

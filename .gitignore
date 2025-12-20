@@ -13,3 +13,5 @@ cross/
 *.swo
 *.tmp
 .DS_Store
+
+isodir
