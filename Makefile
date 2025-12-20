@@ -32,6 +32,7 @@ $(KERNEL_ELF): $(BOOT_OBJ) $(KERNEL_OBJ)
 $(ISO_NAME): $(KERNEL_ELF)
 	mkdir -p iso/boot/grub
 	cp $(KERNEL_ELF) iso/boot/kernel.elf
+	cp grub.cfg iso/boot/grub/grub.cfg
 	grub-mkrescue -o $(ISO_NAME) iso
 
 
