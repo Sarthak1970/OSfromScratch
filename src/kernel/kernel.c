@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include "../cpu/gdt.c"
 
 #if defined(__linux__)
 #error "You are not using a cross-compiler, you will most certainly run into trouble"
@@ -117,9 +118,10 @@ void terminal_writestring(const char* data)
 
 void kernel_main(void) 
 {
-	/* Initialize terminal interface */
+	gdt_init();
+
 	terminal_initialize();
 
-	/* Newline support is left as an exercise. */
 	terminal_writestring("Hello, This is a Kernel!\n");
+	// for(;;);
 }
