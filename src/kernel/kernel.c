@@ -1,7 +1,10 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "cpu/gdt.h"
+#include "cpu/gdt/gdt.h"
+#include "cpu/interupts/idt.c"
+#include "terminal.h"
+
 
 #if defined(__linux__)
 #error "You are not using a cross-compiler, you will most certainly run into trouble"
@@ -119,7 +122,7 @@ void terminal_writestring(const char* data)
 void kernel_main(void) 
 {
 	gdt_init();
-
+	idt_init();
 	terminal_initialize();
 
 	terminal_writestring("Hello, This is a Kernel!\n");

@@ -9,8 +9,13 @@ LDFLAGS  = -T linker.ld -ffreestanding -O2 -nostdlib
 BOOT_SRC    = src/bootloader/boot.s
 KERNEL_SRC  = src/kernel/kernel.c
 
-GDT_SRC=src/cpu/gdt.c
-GDT_FLUSH_SRC=src/cpu/gdt_flush.s
+GDT_SRC=src/cpu/gdt/gdt.c
+GDT_FLUSH_SRC=src/cpu/gdt/gdt_flush.s
+IDT_SRC=src/cpu/interputs/idt.c
+ISR_SRC=src/cpu/interputs/isr.s
+
+ISR_OBJ=build/isr.o
+IDT_OBJ=build/ist.o
 
 GDT_FLUSH_OBJ=build/gdt_flush.o
 GDT_OBJ = build/gdt.o
@@ -34,12 +39,19 @@ $(KERNEL_OBJ): $(KERNEL_SRC) | build
 $(GDT_OBJ):$(GDT_SRC) | build
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(IDT_OBJ):$(IDT_SRC) | build
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(ISR_OBJ):$(ISR_SRC) | build
+	$(AS) $< -o $@
+
 $(GDT_FLUSH_OBJ):$(GDT_FLUSH_SRC) | build
 	$(AS) $< -o $@
 
-$(KERNEL_ELF): $(BOOT_OBJ) $(KERNEL_OBJ) $(GDT_OBJ) $(GDT_FLUSH_OBJ)
-	$(LD) $(LDFLAGS) -o $@ $^ -lgcc
 
+$(KERNEL_ELF): $(BOOT_OBJ) $(KERNEL_OBJ) $(GDT_OBJ) $(GDT_FLUSH_OBJ) $(IDT_OBJ) $(ISR_OBJ)
+	$(LD) $(LDFLAGS) -o $@ $^ -lgcc
+	
 $(ISO_NAME): $(KERNEL_ELF)
 	mkdir -p iso/boot/grub
 	cp $(KERNEL_ELF) iso/boot/kernel.elf
