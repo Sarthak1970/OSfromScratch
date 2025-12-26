@@ -11,11 +11,13 @@ KERNEL_SRC  = src/kernel/kernel.c
 
 GDT_SRC=src/cpu/gdt/gdt.c
 GDT_FLUSH_SRC=src/cpu/gdt/gdt_flush.s
-IDT_SRC=src/cpu/interputs/idt.c
-ISR_SRC=src/cpu/interputs/isr.s
+IDT_SRC=src/cpu/interupts/idt.c
+ISR_SRC=src/cpu/interupts/isr.s
+INTERRUPTS_C = src/cpu/interupts/interrupts.c
 
+INTERRUPTS_OBJ = build/interrupts.o
 ISR_OBJ=build/isr.o
-IDT_OBJ=build/ist.o
+IDT_OBJ=build/idt.o
 
 GDT_FLUSH_OBJ=build/gdt_flush.o
 GDT_OBJ = build/gdt.o
@@ -42,6 +44,9 @@ $(GDT_OBJ):$(GDT_SRC) | build
 $(IDT_OBJ):$(IDT_SRC) | build
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(INTERRUPTS_OBJ): $(INTERRUPTS_C) | build
+	$(CC) $(CFLAGS) -c $< -o $@
+
 $(ISR_OBJ):$(ISR_SRC) | build
 	$(AS) $< -o $@
 
@@ -49,7 +54,7 @@ $(GDT_FLUSH_OBJ):$(GDT_FLUSH_SRC) | build
 	$(AS) $< -o $@
 
 
-$(KERNEL_ELF): $(BOOT_OBJ) $(KERNEL_OBJ) $(GDT_OBJ) $(GDT_FLUSH_OBJ) $(IDT_OBJ) $(ISR_OBJ)
+$(KERNEL_ELF): $(BOOT_OBJ) $(KERNEL_OBJ) $(GDT_OBJ) $(GDT_FLUSH_OBJ) $(IDT_OBJ) $(ISR_OBJ) $(INTERRUPTS_OBJ)
 	$(LD) $(LDFLAGS) -o $@ $^ -lgcc
 	
 $(ISO_NAME): $(KERNEL_ELF)

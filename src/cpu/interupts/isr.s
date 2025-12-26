@@ -1,26 +1,25 @@
-.section .text
-
 .extern exception_handler
 
-.macro ISR_NOERR n
-.global isr_stub_\n
-isr_stub_\n:
-    pushl $0              
-    pushl $\n             
+.macro ISR_NOERR num
+.global isr_stub_\num
+isr_stub_\num:
+    cli
+    pushl $0         
+    pushl $\num      
     call exception_handler
     add $8, %esp
     iret
 .endm
 
-.macro ISR_ERR n
-.global isr_stub_\n
-isr_stub_\n:
-    pushl $\n            
+.macro ISR_ERR num
+.global isr_stub_\num
+isr_stub_\num:
+    cli
+    pushl $\num      
     call exception_handler
     add $4, %esp
     iret
 .endm
-
 
 ISR_NOERR 0
 ISR_NOERR 1
@@ -31,7 +30,7 @@ ISR_NOERR 5
 ISR_NOERR 6
 ISR_NOERR 7
 
-ISR_ERR   8     
+ISR_ERR   8
 ISR_NOERR 9
 ISR_ERR   10
 ISR_ERR   11

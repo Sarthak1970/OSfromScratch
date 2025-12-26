@@ -3,6 +3,8 @@
 
 #include<stdint.h>
 
+void exception_handler(uint32_t interrupt, uint32_t error);
+void idt_init(void);
 
 typedef struct {   //IDT-entry(32-bit)
     uint16_t isr_low; 

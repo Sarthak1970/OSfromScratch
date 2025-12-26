@@ -2,7 +2,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "cpu/gdt/gdt.h"
-#include "cpu/interupts/idt.c"
+#include "cpu/interupts/interrupts.h"
 #include "terminal.h"
 
 
@@ -122,9 +122,15 @@ void terminal_writestring(const char* data)
 void kernel_main(void) 
 {
 	gdt_init();
-	idt_init();
 	terminal_initialize();
+	idt_init();
+	asm volatile("sti");
 
-	terminal_writestring("Hello, This is a Kernel!\n");
+	terminal_writestring("Hello, This is a Kernel with interrupts!\n");
+
+
+	// asm volatile("int $3"); //testing:Should print 3
+
+
 	for(;;);
 }
